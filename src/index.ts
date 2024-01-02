@@ -5,20 +5,26 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import connectDb from "./db/connection.js";
 import route from "./routes/index.js";
+import cors from "cors";
 import "dotenv/config";
 const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
 // middlewares
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+); //used to allow special domains to send requests to server
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
-app.use(cookieParser()); //extracts cookies data from http request
+app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
 app.use(express.urlencoded({ extended: true })); //extracts data from requests body
 app.use(compression({ level: 6, threshold: 1000 })); //compresses size of responses
 
 // routes
 app.use("/api/v1/", route);
-
 // server and database connection
 connectDb()
   .then(() => {

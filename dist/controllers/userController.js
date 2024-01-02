@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
 import { compare, hash } from "bcrypt";
+import { createToken } from "../utils/tokenManager.js";
+import { COOKIE_NAME, COOKIE_OPTIONS } from "../utils/constants.js";
 // sends data of all the user to client
 const getAllRoutes = async (req, res) => {
     try {
@@ -26,7 +28,20 @@ const signup = async (req, res) => {
         // registering new user
         const user = new User({ name, email, password: encPassword });
         await user.save();
-        return res.status(201).json({ message: "OK", data: user._id.toString() });
+        // clearing previously stored cookies
+        res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
+        // creating json web token (expires in 7 days by default)
+        const token = createToken(user._id.toString(), user.email);
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        // sending cookies to client
+        res.cookie(COOKIE_NAME, token, {
+            expires,
+            ...COOKIE_OPTIONS,
+        });
+        return res
+            .status(201)
+            .json({ message: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         console.log(error.message);
@@ -45,18 +60,53 @@ const signin = async (req, res) => {
                 .json({ message: "ERROR", cause: "User not registered" });
         // checking the password from database
         const isPasswordValid = await compare(password, user.password);
-        if (!isPasswordValid) {
+        if (!isPasswordValid)
             return res
                 .status(403)
                 .json({ message: "ERROR", cause: "Incorrect password" });
-        }
-        return res.status(200).json({ message: "OK", data: user._id.toString() });
+        // clearing previously stored cookies
+        res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
+        // creating json web token (expires in 7 days by default)
+        const token = createToken(user._id.toString(), user.email);
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 7);
+        // sending cookies to client
+        res.cookie(COOKIE_NAME, token, {
+            expires,
+            ...COOKIE_OPTIONS,
+        });
+        return res
+            .status(200)
+            .json({ message: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         console.log(error.message);
         return res.status(404).json({ message: "ERROR", cause: error.message });
     }
 };
-const userController = { getAllRoutes, signup, signin };
+const authStatus = async (req, res) => {
+    try {
+        // extracting id from local variables
+        const { id } = res.locals.jwtData;
+        // finding user by id
+        const user = await User.findById(id);
+        if (!user)
+            return res
+                .status(404)
+                .json({ message: "ERROR", cause: "User not found or Token expired" });
+        if (id !== user._id.toString())
+            return res
+                .status(401)
+                .json({ message: "ERROR", cause: "User is unauthorized" });
+        return res
+            .status(200)
+            .json({ message: "OK", name: user.name, email: user.email });
+    }
+    catch (error) {
+        console.log(error.message);
+        return res.status(404).json({ message: "ERROR", cause: error.message });
+    }
+};
+const userController = { getAllRoutes, signup, signin, authStatus };
 export default userController;
 //# sourceMappingURL=userController.js.map
