@@ -1,16 +1,16 @@
 import User from "../models/userModel.js";
 import { compare, hash } from "bcrypt";
 import { createToken } from "../utils/tokenManager.js";
-import { COOKIE_NAME, COOKIE_OPTIONS } from "../utils/constants.js";
+import { COOKIE_NAME, COOKIE_OPTIONS, ERROR_401, ERROR_403, ERROR_404, ERROR_500, } from "../utils/constants.js";
 // sends data of all the user to client
 const getAllRoutes = async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}, { _id: 1, name: 1, email: 1 });
         return res.status(200).json({ message: "OK", data: users });
     }
     catch (error) {
         console.log(error);
-        return res.status(404).json({ message: "ERROR", cause: error.message });
+        return res.status(500).json({ message: "ERROR", cause: ERROR_500 });
     }
 };
 // handles the signup requests of the new user
@@ -20,9 +20,7 @@ const signup = async (req, res) => {
         // checking that if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser)
-            return res
-                .status(401)
-                .json({ message: "ERROR", cause: "User already registered" });
+            return res.status(403).json({ message: "ERROR", cause: ERROR_403 });
         // encrypting the password of user
         const encPassword = await hash(password, 10);
         // registering new user
@@ -45,7 +43,7 @@ const signup = async (req, res) => {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(404).json({ message: "ERROR", cause: error.message });
+        return res.status(404).json({ message: "ERROR", cause: ERROR_500 });
     }
 };
 // handles the signin requests of the existing User
@@ -55,15 +53,11 @@ const signin = async (req, res) => {
         // checking that if email exists
         const user = await User.findOne({ email });
         if (!user)
-            return res
-                .status(401)
-                .json({ message: "ERROR", cause: "User not registered" });
+            return res.status(404).json({ message: "ERROR", cause: ERROR_404 });
         // checking the password from database
         const isPasswordValid = await compare(password, user.password);
         if (!isPasswordValid)
-            return res
-                .status(403)
-                .json({ message: "ERROR", cause: "Incorrect password" });
+            return res.status(403).json({ message: "ERROR", cause: ERROR_403 });
         // clearing previously stored cookies
         res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
         // creating json web token (expires in 7 days by default)
@@ -81,7 +75,7 @@ const signin = async (req, res) => {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(404).json({ message: "ERROR", cause: error.message });
+        return res.status(500).json({ message: "ERROR", cause: ERROR_500 });
     }
 };
 const authStatus = async (req, res) => {
@@ -91,20 +85,16 @@ const authStatus = async (req, res) => {
         // finding user by id
         const user = await User.findById(id);
         if (!user)
-            return res
-                .status(404)
-                .json({ message: "ERROR", cause: "User not found or Token expired" });
+            return res.status(404).json({ message: "ERROR", cause: ERROR_404 });
         if (id !== user._id.toString())
-            return res
-                .status(401)
-                .json({ message: "ERROR", cause: "User is unauthorized" });
+            return res.status(401).json({ message: "ERROR", cause: ERROR_401 });
         return res
             .status(200)
             .json({ message: "OK", name: user.name, email: user.email });
     }
     catch (error) {
         console.log(error.message);
-        return res.status(404).json({ message: "ERROR", cause: error.message });
+        return res.status(404).json({ message: "ERROR", cause: ERROR_500 });
     }
 };
 const userController = { getAllRoutes, signup, signin, authStatus };

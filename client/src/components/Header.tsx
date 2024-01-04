@@ -24,7 +24,7 @@ const Header = () => {
               />
               <NavLink
                 bg="#51538f"
-                to="/"
+                to="/login"
                 text="Logout"
                 textColor="white"
                 onClick={auth.logout}

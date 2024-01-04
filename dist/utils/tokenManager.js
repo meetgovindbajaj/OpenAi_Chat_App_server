@@ -22,7 +22,6 @@ export const verifyToken = async (req, res, next) => {
                     .status(401)
                     .json({ message: "ERROR", cause: "Token Expired" });
             }
-            console.log("Token Verification Successfull");
             resolve();
             // storing signed user info into local variables (id , email)
             res.locals.jwtData = success;

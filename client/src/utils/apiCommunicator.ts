@@ -14,13 +14,27 @@ export const signupUser = async (
 ) => {
   const res = await axios.post("/user/signup", { name, email, password });
   const data = await res.data;
-  if (res.status !== 200) throw new Error(data.cause);
+  if (res.status !== 201) throw new Error(data.cause);
   return data;
 };
 
 export const checkAuthToken = async () => {
   const res = await axios.get("/user/signin");
   if (res.status !== 200) throw new Error("Automatic login failed");
+  const data = await res.data;
+  return data;
+};
+
+export const sendMessage = async (message: string) => {
+  const res = await axios.post("/chats/new", { message });
+  if (res.status !== 200) throw new Error("Some error occured");
+  const data = await res.data;
+  return data;
+};
+
+export const getMessages = async () => {
+  const res = await axios.get("/chats");
+  if (res.status !== 200) throw new Error("Some error occured");
   const data = await res.data;
   return data;
 };

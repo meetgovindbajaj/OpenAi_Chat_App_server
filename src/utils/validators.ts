@@ -25,4 +25,8 @@ export const signupValidator = [
   ...signinValidator,
 ];
 
+export const chatCompletionValidator = [
+  body("message").notEmpty().withMessage("Message is required"),
+];
+
 export default validator;
