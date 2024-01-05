@@ -16,6 +16,7 @@ app.use(
     origin: "https://open-ai-chat-app-eight.vercel.app/",
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
   })
 ); //used to allow special domains to send requests to server
 app.use(morgan("dev")); //logs url requests
