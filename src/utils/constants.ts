@@ -1,13 +1,13 @@
 export const COOKIE_NAME: string = "auth_token";
 export const COOKIE_OPTIONS: {
   path: string;
-  domain: string;
+  domain?: string;
   httpOnly: boolean;
   signed: boolean;
   secure: boolean;
 } = {
   path: "/",
-  domain: ".vercel.app",
+  // domain: ".vercel.app",
   httpOnly: true,
   signed: true,
   secure: true,
