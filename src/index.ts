@@ -14,18 +14,17 @@ const PORT: string | number = process.env.PORT || 5000;
 // middlewares
 app.use(
   cors({
-    origin: "open-ai-chat-app-eight.vercel.app",
+    origin: "*",
     credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 ); //used to allow special domains to send requests to server
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginResourcePolicy: false,
-    crossOriginEmbedderPolicy: false,
-  })
-);
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: false,
+//     crossOriginResourcePolicy: false,
+//     crossOriginEmbedderPolicy: false,
+//   })
+// );
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
 app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
