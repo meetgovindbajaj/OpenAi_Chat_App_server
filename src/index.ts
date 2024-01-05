@@ -14,7 +14,10 @@ const PORT: string | number = process.env.PORT || 5000;
 // middlewares
 app.use(
   cors({
-    origin: "https://open-ai-chat-app-eight.vercel.app/*",
+    origin: [
+      "open-ai-chat-app-eight.vercel.app",
+      "open-ai-chat-diyedm6oy-meetgovindbajaj.vercel.app",
+    ],
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
