@@ -4,11 +4,13 @@ export const COOKIE_OPTIONS: {
   domain: string;
   httpOnly: boolean;
   signed: boolean;
+  secure: boolean;
 } = {
   path: "/",
   domain: "open-ai-chat-app-eight.vercel.app",
   httpOnly: true,
   signed: true,
+  secure: true,
 };
 export const ERROR_401: string = "Unauthorized access";
 export const ERROR_403: string = "Invalid credentials";
