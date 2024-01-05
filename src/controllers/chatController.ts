@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/userModel.js";
-import { ERROR_404, ERROR_500 } from "../utils/constants.js";
+import { ERROR_404, GPT_RESPONSES } from "../utils/constants.js";
 import Chat from "../models/chatModel.js";
-import { configureOpenAi } from "../config/openaiConfig.js";
-import OpenAI from "openai";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const getAllChats = async (req: Request, res: Response) => {
   try {
@@ -26,7 +23,6 @@ const generateChatCompletion = async (req: Request, res: Response) => {
     let user = await User.findById(id);
     if (!user)
       return res.status(404).json({ message: "ERROR", cause: ERROR_404 });
-
     // creating new chat
 
     // configuring and getting response of chat from openai model
@@ -39,28 +35,39 @@ const generateChatCompletion = async (req: Request, res: Response) => {
     // creating new chat of response
     const chat = new Chat({ content: message, role: "user" });
     const newChat = new Chat({
-      content: "hi this is ai assistant",
+      content: GPT_RESPONSES[Math.floor(Math.random() * 281)],
       role: "assistant",
     });
-    const [userData, userMessage, aiResponse] = await Promise.all([
-      User.findByIdAndUpdate(
-        id,
-        {
-          $addToSet: {
-            chats: [chat._id, newChat._id],
-          },
+    await Promise.all([
+      user.updateOne({
+        $addToSet: {
+          chats: [chat._id, newChat._id],
         },
-        { new: true }
-      ).populate("chats", "_id content role"),
+      }),
       chat.save(),
       newChat.save(),
     ]);
-    return res.status(200).json({ message: "OK", data: userData.chats });
+    return res.status(200).json({ message: "OK", newChat });
   } catch (error) {
     console.log(error);
     return res.status(500).send(error.message);
   }
 };
 
-const chatController = { getAllChats, generateChatCompletion };
+const deleteChats = async (req: Request, res: Response) => {
+  try {
+    const { id } = res.locals.jwtData;
+    const user = await User.findById(id, { chats: 1 });
+    if (!user)
+      return res.status(404).json({ message: "ERROR", cause: ERROR_404 });
+    const deleteArray = user.chats.map((id) => Chat.deleteOne({ _id: id }));
+    await Promise.all(deleteArray);
+    return res.status(200).json({ message: "OK" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+};
+
+const chatController = { getAllChats, generateChatCompletion, deleteChats };
 export default chatController;

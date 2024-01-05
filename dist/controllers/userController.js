@@ -97,6 +97,10 @@ const authStatus = async (req, res) => {
         return res.status(404).json({ message: "ERROR", cause: ERROR_500 });
     }
 };
-const userController = { getAllRoutes, signup, signin, authStatus };
+const logout = async (req, res) => {
+    res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
+    return res.status(200).json({ message: "OK" });
+};
+const userController = { getAllRoutes, signup, signin, authStatus, logout };
 export default userController;
 //# sourceMappingURL=userController.js.map

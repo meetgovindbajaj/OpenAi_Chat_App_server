@@ -9,5 +9,6 @@ userRoutes
     .route("/signin")
     .post(validator(signinValidator), userController.signin)
     .get(verifyToken, userController.authStatus);
+userRoutes.get("/logout", verifyToken, userController.logout);
 export default userRoutes;
 //# sourceMappingURL=userRoutes.js.map

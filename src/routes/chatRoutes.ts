@@ -6,7 +6,10 @@ import validator, { chatCompletionValidator } from "../utils/validators.js";
 const chatRoutes: Router = Router();
 
 // protected api
-chatRoutes.route("/").get(verifyToken, chatController.getAllChats);
+chatRoutes
+  .route("/")
+  .get(verifyToken, chatController.getAllChats)
+  .delete(verifyToken, chatController.deleteChats);
 chatRoutes.post(
   "/new",
   validator(chatCompletionValidator),

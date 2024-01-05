@@ -114,5 +114,10 @@ const authStatus = async (req: Request, res: Response) => {
   }
 };
 
-const userController = { getAllRoutes, signup, signin, authStatus };
+const logout = async (req: Request, res: Response) => {
+  res.clearCookie(COOKIE_NAME, COOKIE_OPTIONS);
+  return res.status(200).json({ message: "OK" });
+};
+
+const userController = { getAllRoutes, signup, signin, authStatus, logout };
 export default userController;
