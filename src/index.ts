@@ -36,6 +36,7 @@ app.use(compression({ level: 6, threshold: 1000 })); //compresses size of respon
 // routes
 app.use("/api/v1/", route);
 // server and database connection
+console.log(PORT);
 connectDb()
   .then(() => {
     app.listen(PORT, () => console.log("Server Running"));
