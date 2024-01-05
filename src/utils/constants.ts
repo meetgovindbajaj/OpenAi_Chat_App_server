@@ -7,7 +7,7 @@ export const COOKIE_OPTIONS: {
   secure?: boolean;
 } = {
   path: "/",
-  domain: "open-ai-chat-app-eight.vercel.app",
+  domain: "https://open-ai-chat-app-eight.vercel.app",
   httpOnly: true,
   signed: true,
 };
