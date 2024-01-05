@@ -7,6 +7,7 @@ import connectDb from "./db/connection.js";
 import route from "./routes/index.js";
 import cors from "cors";
 import "dotenv/config";
+import helmet from "helmet";
 const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
@@ -16,9 +17,15 @@ app.use(
     origin: "https://open-ai-chat-app-eight.vercel.app/*",
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
   })
 ); //used to allow special domains to send requests to server
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
 app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
