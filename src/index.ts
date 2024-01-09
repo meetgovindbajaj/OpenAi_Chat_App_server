@@ -12,28 +12,28 @@ const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
 // middlewares
-// app.use(
-//   cors({
-//     origin: "https://open-ai-chat-app-eight.vercel.app",
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     credentials: true,
-//   })
-// ); //used to allow special domains to send requests to server
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://open-ai-chat-app-eight.vercel.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
-);
+); //used to allow special domains to send requests to server
 // app.use(
-//   helmet({
-//     contentSecurityPolicy: false,
-//     crossOriginResourcePolicy: false,
-//     crossOriginEmbedderPolicy: false,
-//     referrerPolicy: { policy: "no-referrer" },
+//   cors({
+//     origin: "http://localhost:3000",
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     credentials: true,
 //   })
 // );
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false,
+    referrerPolicy: { policy: "no-referrer" },
+  })
+);
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
 app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
