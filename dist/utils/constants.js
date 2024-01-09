@@ -1,9 +1,12 @@
 export const COOKIE_NAME = "auth_token";
 export const COOKIE_OPTIONS = {
     path: "/",
+    // domain: ".vercel.app",
     domain: "localhost",
     httpOnly: true,
     signed: true,
+    // sameSite: "none",
+    // secure: true,
 };
 export const ERROR_401 = "Unauthorized access";
 export const ERROR_403 = "Invalid credentials";

@@ -5,14 +5,15 @@ export const COOKIE_OPTIONS: {
   httpOnly: boolean;
   signed: boolean;
   secure?: boolean;
-  sameSite: string;
+  sameSite?: boolean | "none" | "strict" | "lax";
 } = {
   path: "/",
-  domain: ".vercel.app",
+  // domain: ".vercel.app",
+  domain: "localhost",
   httpOnly: true,
   signed: true,
-  sameSite: "none",
-  secure: true,
+  // sameSite: "none",
+  // secure: true,
 };
 export const ERROR_401: string = "Unauthorized access";
 export const ERROR_403: string = "Invalid credentials";

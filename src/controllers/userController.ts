@@ -45,13 +45,19 @@ const signup = async (req: Request, res: Response) => {
     expires.setDate(expires.getDate() + 7);
 
     // sending cookies to client
-    res.cookie(COOKIE_NAME, token, {
+    // res.cookie(COOKIE_NAME, token, {
+    //   expires,
+    //   ...COOKIE_OPTIONS,
+    // });
+    return res.status(201).json({
+      message: "OK",
+      name: user.name,
+      email: user.email,
+      token,
+      Cookie_Name: COOKIE_NAME,
+      Cookie_Options: COOKIE_OPTIONS,
       expires,
-      ...COOKIE_OPTIONS,
     });
-    return res
-      .status(201)
-      .json({ message: "OK", name: user.name, email: user.email });
   } catch (error) {
     console.log(error.message);
     return res.status(404).json({ message: "ERROR", cause: ERROR_500 });
@@ -82,13 +88,19 @@ const signin = async (req: Request, res: Response) => {
     expires.setDate(expires.getDate() + 7);
 
     // sending cookies to client
-    res.cookie(COOKIE_NAME, token, {
+    // res.cookie(COOKIE_NAME, token, {
+    //   expires,
+    //   ...COOKIE_OPTIONS,
+    // });
+    return res.status(200).json({
+      message: "OK",
+      name: user.name,
+      email: user.email,
+      token,
+      Cookie_Name: COOKIE_NAME,
+      Cookie_Options: COOKIE_OPTIONS,
       expires,
-      ...COOKIE_OPTIONS,
     });
-    return res
-      .status(200)
-      .json({ message: "OK", name: user.name, email: user.email });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: "ERROR", cause: ERROR_500 });
