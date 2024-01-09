@@ -19,6 +19,7 @@ app.use(
     credentials: true,
   })
 ); //used to allow special domains to send requests to server
+
 // app.use(
 //   cors({
 //     origin: "http://localhost:3000",

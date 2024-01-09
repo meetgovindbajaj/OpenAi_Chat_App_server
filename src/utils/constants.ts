@@ -9,7 +9,7 @@ export const COOKIE_OPTIONS: {
 } = {
   path: "/",
   // domain: ".vercel.app",
-  domain: "localhost",
+  // domain: "localhost",
   httpOnly: true,
   signed: true,
   // sameSite: "none",
