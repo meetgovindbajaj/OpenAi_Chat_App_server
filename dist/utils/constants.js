@@ -2,7 +2,7 @@ export const COOKIE_NAME = "auth_token";
 export const COOKIE_OPTIONS = {
     path: "/",
     // domain: ".vercel.app",
-    domain: "localhost",
+    // domain: "localhost",
     httpOnly: true,
     signed: true,
     // sameSite: "none",
