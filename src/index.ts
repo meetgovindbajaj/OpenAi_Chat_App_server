@@ -28,6 +28,7 @@ app.use(
 //     referrerPolicy: { policy: "no-referrer" },
 //   })
 // );
+
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
 app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
