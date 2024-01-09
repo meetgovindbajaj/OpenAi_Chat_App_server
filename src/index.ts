@@ -21,20 +21,13 @@ app.use(
 ); //used to allow special domains to send requests to server
 
 // app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     credentials: true,
+//   helmet({
+//     contentSecurityPolicy: false,
+//     crossOriginResourcePolicy: false,
+//     crossOriginEmbedderPolicy: false,
+//     referrerPolicy: { policy: "no-referrer" },
 //   })
 // );
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginResourcePolicy: false,
-    crossOriginEmbedderPolicy: false,
-    referrerPolicy: { policy: "no-referrer" },
-  })
-);
 app.use(morgan("dev")); //logs url requests
 app.use(express.json()); //parses json data sent from client
 app.use(cookieParser(process.env.COOKIE_SECRET)); //extracts cookies data from http request
