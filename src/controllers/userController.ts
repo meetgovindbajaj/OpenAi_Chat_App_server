@@ -54,8 +54,7 @@ const signup = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       token,
-      Cookie_Name: COOKIE_NAME,
-      Cookie_Options: COOKIE_OPTIONS,
+      Cookie_Name: "auth_token",
       expires,
     });
   } catch (error) {
@@ -97,8 +96,7 @@ const signin = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       token,
-      Cookie_Name: COOKIE_NAME,
-      Cookie_Options: COOKIE_OPTIONS,
+      Cookie_Name: "auth_token",
       expires,
     });
   } catch (error) {
